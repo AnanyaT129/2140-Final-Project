@@ -42,11 +42,13 @@ class BagClass:
         random.shuffle(self.bag)
 
     def remove_tile(self):
+        removed = self.bag[-1]
         self.bag.pop()
-
+        return removed
+        
     def get_bag_size(self):
         return len(self.bag)
 
-bag1 = BagClass()
-print(bag1.bag)
-print(bag1.get_bag_size())
+# bag1 = BagClass()
+# print(bag1.bag)
+# print(bag1.get_bag_size())

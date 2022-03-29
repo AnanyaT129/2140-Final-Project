@@ -10,6 +10,7 @@ class BoardClass:
     def __init__(self):
         self.board_letters = np.zeros((BOARD_DIMENSION, BOARD_DIMENSION), dtype=int).tolist()
         self.board_scores = np.ones((BOARD_DIMENSION, BOARD_DIMENSION), dtype=int)
+        self.guesses = []
         self.set_scores()
     
     def set_scores(self):
@@ -34,6 +35,9 @@ class BoardClass:
                     self.board_letters[start[0]][start[1] + x] = list_of_letters[x]
         except IndexError:
             print("The word you inputted is either too long or the starting point is invalid.")
+    
+    def get_guesses(self):
+        return self.guesses
 
 board1 = BoardClass()
 print(board1.board_letters)
