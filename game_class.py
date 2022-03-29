@@ -1,5 +1,4 @@
-from board_class import BoardClass
-from player_class import PlayerClass
+from scrabble_module import PlayerClass, BagClass, BoardClass, WordClass
 
 # class containing functions to do with the game
 #  - Update round number
@@ -15,6 +14,7 @@ class GameClass:
         self.current_board = None
         self.player1 = None
         self.player2 = None
+        self.bag = None
     
     def update_round_num(self):
         self.round_number += 1
@@ -27,6 +27,7 @@ class GameClass:
             return False
     
     def game_start(self, player1, player2):
-        self.player1 = PlayerClass(player1)
-        self.player2 = PlayerClass(player2)
         self.current_board = BoardClass()
+        self.bag = BagClass()
+        self.player1 = PlayerClass(player1, self.bag)
+        self.player2 = PlayerClass(player2, self.bag)
