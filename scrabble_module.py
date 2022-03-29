@@ -38,6 +38,9 @@ class PlayerClass:
     
     def get_letters(self):
         return self.letters
+    
+    def remove_letter(self, letter):
+        self.letters.remove(letter)
 
 # BagClass
 # class containing functions to do with the bag of letters
@@ -129,6 +132,9 @@ class BoardClass:
     
     def get_scoreboard(self):
         return self.board_scores
+    
+    def get_letterboard(self):
+        return self.board_letters
 
 # WordClass
 # class containing functions to do with an entered word
@@ -142,6 +148,7 @@ class WordClass:
         self.starting_point = start
         self.direction = direction
         self.player = player
+        self.used_letters = []
 
     # check word is in dictionary
     def word_checker(self):
@@ -163,12 +170,20 @@ class WordClass:
             return False
 
     # check word uses the existing letters on the board properly
-    def check_if_word_in_hand(self):
+    def check_if_word_in_hand(self, board):
         letters_in_word = [char for char in self.word]
-        if letters_in_word in self.player.get_letters():
-            return True
-        else:
-            return False
+        letterboard = board.get_letterboard()
+        for x in range(len(letters_in_word)):
+            if self.direction == "down":
+                if letterboard[self.starting_point[0]+x][self.starting_point[1]] == letters_in_word[x]:
+                    continue
+                elif letterboard[self.starting_point[0]+x][self.starting_point[1]] == 0 and \
+                    letters_in_word[x] in self.player.get_letters():
+                    self.used_letters.append(letters_in_word[x])
+                    continue
+                else:
+                    return False
+        return True
         
     # check word is not a repeated word
     def check_repeat(self, board):
@@ -179,7 +194,7 @@ class WordClass:
 
     # check word is valid
     def valid_word(self, board):
-        if WordClass.word_checker(self.word) and WordClass.check_repeat(board):
+        if WordClass.word_checker(self.word) and WordClass.check_repeat(board) and WordClass.check_if_word_in_hand():
             return True
         else:
             return False
@@ -199,3 +214,6 @@ class WordClass:
             return sum
         except:
             return 0
+    
+    def return_used_letters(self):
+        return self.used_letters

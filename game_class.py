@@ -26,8 +26,21 @@ class GameClass:
         else:
             return False
     
-    def game_start(self, player1, player2):
+    def game_start(self, player1_name, player2_name):
         self.current_board = BoardClass()
         self.bag = BagClass()
-        self.player1 = PlayerClass(player1, self.bag)
-        self.player2 = PlayerClass(player2, self.bag)
+        self.player1 = PlayerClass(player1_name, self.bag)
+        self.player2 = PlayerClass(player2_name, self.bag)
+    
+    # need to add skips
+    def game_turn(self, word, start, direction, player):
+        entered_word = WordClass(word, start, direction, player)
+        if WordClass.valid_word(entered_word) == True:
+            points = entered_word.calculate_points
+            if points != 0:
+                self.current_board.place_word(word, start, direction)
+                player.update_score(points)
+                used_letters = entered_word.return_used_letters()
+                for x in used_letters:
+                    player.remove_letter(x)
+                player.replenish_letters(self.bag)
