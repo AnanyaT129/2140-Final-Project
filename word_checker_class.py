@@ -24,4 +24,7 @@ class WordChecker:
         else:
             return "Invalid"
 
+word = input('Enter the word: ')
+word1 = WordChecker(word)
 
+print(word1.word_checker())
