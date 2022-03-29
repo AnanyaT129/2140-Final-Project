@@ -24,13 +24,16 @@ class BoardClass:
         self.board_scores[4][4] = 3
 
     def place_word(self, word, direction, start):
-        list_of_letters = [char for char in word.upper()]
-        if direction == "down":
-            for x in range(len(word)):
-                self.board_letters[start[0]+x][start[1]] = list_of_letters[x]
-        elif direction == "right":
-            for x in range(len(word)):
-                self.board_letters[start[0]][start[1]+x] = list_of_letters[x]
+        try:
+            list_of_letters = [char for char in word.upper()]
+            if direction == "down":
+                for x in range(len(word)):
+                    self.board_letters[start[0] + x][start[1]] = list_of_letters[x]
+            elif direction == "right":
+                for x in range(len(word)):
+                    self.board_letters[start[0]][start[1] + x] = list_of_letters[x]
+        except IndexError:
+            print("The word you inputted is either too long or the starting point is invalid.")
 
 board1 = BoardClass()
 print(board1.board_letters)
