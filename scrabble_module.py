@@ -163,7 +163,13 @@ class WordClass:
             return False
 
     # check word uses the existing letters on the board properly
-
+    def check_if_word_in_hand(self):
+        letters_in_word = [char for char in self.word]
+        if letters_in_word in self.player.get_letters():
+            return True
+        else:
+            return False
+        
     # check word is not a repeated word
     def check_repeat(self, board):
         if self.word in board.get_guesses():
