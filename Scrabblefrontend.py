@@ -114,8 +114,6 @@ btnRead=Button(window, height=1, width=4, text="Enter", command=get_text)
 btnRead.pack()
 btnRead.place(x=70, y=160)
 
-#add button that clears text in box, everytime the enter button is clicked, appends word to list of used words if the word is valid
-
 
 
 #Check if the inputted word is valid then according to the starting point and direction, place each letter in the word
