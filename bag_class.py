@@ -48,6 +48,9 @@ class BagClass:
         
     def get_bag_size(self):
         return len(self.bag)
+    
+    def get_bag(self):
+        return self.bag
 
 # bag1 = BagClass()
 # print(bag1.bag)

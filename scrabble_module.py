@@ -5,7 +5,7 @@ import numpy as np
 
 # global variables
 global BOARD_DIMENSION
-BOARD_DIMENSION = 5
+BOARD_DIMENSION = 15
 global letter_value 
 letter_value = {"A": 1, "B": 3, "C": 3, "D": 2, "E": 1, "F": 4, "G": 2, "H": 4, "I": 1, "J": 8, "K": 5, "L": 1, "M": 3, "N": 1, "O": 1, "P": 3, "Q": 10, "R": 1, "S": 1., "T": 1, "U": 1, "V": 4, "W": 4, "X": 8, "Y": 4, "Z": 10}
 
@@ -26,7 +26,7 @@ class PlayerClass:
         self.replenish_letters(bag)
     
     def update_score(self, points):
-        self.score = self.score + points
+        self.score += points
     
     def get_score(self):
         return self.score
@@ -194,7 +194,19 @@ class WordClass:
 
     # check word is valid
     def valid_word(self, board):
-        if WordClass.word_checker(self.word) and WordClass.check_repeat(board) and WordClass.check_if_word_in_hand():
+        if (WordClass.word_checker(self) and 
+            WordClass.check_repeat(self, board) and 
+            WordClass.check_if_word_in_hand(self, board) and
+            len(self.word) > 7 - len(self.player.get_letters())):
+            return True
+        else:
+            return False
+    
+    def valid_first_word(self, board):
+        if (WordClass.word_checker(self) and
+            WordClass.check_repeat(self, board) and
+            WordClass.check_if_word_in_hand(self, board) and
+            (self.starting_point[0] == 0 or self.starting_point[1] == 0)):
             return True
         else:
             return False

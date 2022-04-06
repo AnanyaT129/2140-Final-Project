@@ -27,6 +27,9 @@ class PlayerClass:
     
     def get_letters(self):
         return self.letters
+    
+    def remove_letter(self, letter):
+        self.letters.remove(letter)
 
 bag1 = BagClass()
 print(bag1.bag)
@@ -37,5 +40,13 @@ print(player1.get_score())
 player1.update_score(6)
 print(player1.get_score())
 print(player1.get_letters())
+last_letter = player1.get_letters()[-1]
 
+print(bag1.get_bag_size())
+
+player1.remove_letter(last_letter)
+print(player1.get_letters())
+
+player1.replenish_letters(bag1)
+print(player1.get_letters())
 print(bag1.get_bag_size())
