@@ -1,4 +1,4 @@
-from scrabble_module import PlayerClass, BagClass, BoardClass, WordClass
+from scrabble_classes import PlayerClass, BagClass, BoardClass, WordClass
 
 # class containing functions to do with the game
 #  - Check for game end

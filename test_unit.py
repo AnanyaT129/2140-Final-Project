@@ -1,5 +1,5 @@
 import unittest
-from scrabble_module import PlayerClass, BagClass, BoardClass, WordClass
+from scrabble_classes import PlayerClass, BagClass, BoardClass, WordClass
 
 class TestPlayerMethods(unittest.TestCase):
 
@@ -45,6 +45,21 @@ class TestPlayerMethods(unittest.TestCase):
 class TestBagMethods(unittest.TestCase):
     def setUp(self):
         self.bag = BagClass()
+    
+    def test_initialize(self):
+        self.assertEqual(len(self.bag.bag), 100) 
+    
+    def test_remove_tile(self):
+        last = self.bag.bag[-1]
+        self.assertEqual(self.bag.remove_tile(), last)
+    
+    def test_get_bag_size(self):
+        self.assertEqual(self.bag.get_bag_size(), len(self.bag.bag))
+
+class TestBoardMethods(unittest.TestCase):
+    def setUp(self):
+        self.board = BoardClass()
+    
     
 
 if __name__ == '__main__':

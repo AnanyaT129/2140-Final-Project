@@ -1,10 +1,12 @@
-from bag_class import BagClass
+from Class_Files.bag_class import BagClass
 
+# PlayerClass
 # class containing functions to do with a player
 #  - Update score
 #  - Get score
 #  - Remove letters
 #  - Replenish letters
+#  - Get letters
 
 class PlayerClass:
     def __init__(self, name, bag):
@@ -15,7 +17,7 @@ class PlayerClass:
         self.replenish_letters(bag)
     
     def update_score(self, points):
-        self.score = self.score + points
+        self.score += points
     
     def get_score(self):
         return self.score
