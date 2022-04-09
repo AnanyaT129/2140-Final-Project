@@ -1,54 +1,84 @@
-import random
-import numpy as np
+# imports
 from tkinter import *
 import tkinter as tk
-from scrabble_module import PlayerClass, BagClass, BoardClass, WordClass
+from scrabble_classes import PlayerClass, BagClass, BoardClass, WordClass
+from game_class import GameClass
 
+# global variables
 global direction_str
 direction_str = 'none'
-
-class GameClass:
-    def __init__(self):
-        self.skipped_turns = [0, 0]
-        self.current_board = None
-        self.player1 = None
-        self.player2 = None
-        self.bag = None
-
-    def check_game_end(self):
-        if self.skipped_turns == [2, 2] or self.bag.get_bag_size() == 0:
-            return True
-        else:
-            return False
-
-    def game_start(self, player1_name, player2_name):
-        self.current_board = BoardClass()
-        self.bag = BagClass()
-        self.player1 = PlayerClass(player1_name, self.bag)
-        self.player2 = PlayerClass(player2_name, self.bag)
-
-    # need to add skips
-    def game_turn(self, word, start, direction, player):
-        entered_word = WordClass(word, start, direction, player)
-        if ((self.current_board.guesses == [] and
-             entered_word.valid_first_word(self.current_board)) or
-                (self.current_board.guesses != [] and entered_word.valid_word(self.current_board))):
-            points = entered_word.calculate_points(self.current_board)
-            if points != 0:
-                self.current_board.place_word(word, direction, start)
-                player.update_score(points)
-                used_letters = entered_word.return_used_letters()
-                for x in used_letters:
-                    player.remove_letter(x)
-                player.replenish_letters(self.bag)
-
-
-# creates a board, interactive textbox where user inputs a word, and buttons which determine direction word is placed
-# starting point must reference position on list
-
 global game
 game = GameClass()
 
+# helper functions
+def directionfunction(direction):
+    """When the direction button on the interface is clicked, the function tells the starting point function which direction to place the letters
+    the backend function must trigger to identify if there is any space for the word.
+    """
+    if direction == 'up':
+        direction_str = 'up'
+    if direction == 'down':
+        direction_str = 'down'
+    if direction == 'right':
+        direction_str = 'right'
+    if direction == 'left':
+        direction_str = 'left'
+
+# Check if the inputted word is valid then according to the starting point and direction, place each letter in the word
+
+def startingpoint(row, col):
+    """When a position on the grid is clicked the program places the letters starting from the point and in a direction stated above.
+            The backend must determine whether the position is valid according to the length of the word and direction"""
+    word = game.current_board.guesses[-1].upper()
+
+    g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, game.player1)
+
+    if g1.valid_word(game.current_board) is False:
+        game.current_board.guesses.remove(game.current_board.guesses[-1])
+        worderror = Tk()
+        worderror.title('Word Error')
+        worderror.geometry("330x90")
+        Label(worderror, text="The inputted word either does not exist in the Scrabble dictionary. \n"
+                                "The letters in the word are not in your hand. \n"
+                                "Or the word has already been used. ").place(x=0, y=0)
+        worderror.mainloop()
+
+    else:
+        if BoardClass().place_word(word, direction_str, (row, col)) is True:
+            if direction_str == 'right':
+                for i in range(row, row + 1):
+                    for j in range(col, len(word) + col):
+                        matrix[i][j].config(text=word[j - col], bg='orange')
+
+            if direction_str == 'down':
+                for i in range(row, len(word) + row):
+                    for j in range(col, col + 1):
+                        matrix[i][j].config(text=word[i - row], bg='orange')
+
+        else:
+            game.current_board.guesses.remove(game.current_board.guesses[-1])
+            error = Tk()
+            error.title('Error Message')
+            error.geometry("250x50")
+            Label(error, text="The inputted word does not fit on the board.\n"
+                                "Try a different starting point and/or direction.").place(x=0, y=0)
+            error.mainloop()
+
+def end_turn():
+        print('End turn here')
+
+def get_text(txtbox):
+    """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
+    result = txtbox.get("1.0", "end")
+    game.current_board.guesses.append(result)
+    print(game.current_board.guesses)
+    for idx, ele in enumerate(game.current_board.guesses):
+        game.current_board.guesses[idx] = ele.replace('\n', '')
+    print(game.current_board.guesses)
+    txtbox.delete(1.0, 5.0)
+
+# creates a board, interactive textbox where user inputs a word, and buttons which determine direction word is placed
+# starting point must reference position on list
 
 def start_turn():
     player_1 = player1_textbox.get("1.0", "end")
@@ -124,14 +154,19 @@ def start_turn():
     M44 = Button(window, text="3x", command=lambda: startingpoint(4, 4), height=2, width=4, bg='white')
     M44.place(x=360, y=272)
 
+    global matrix
+    matrix = [[M00, M01, M02, M03, M04], [M10, M11, M12, M13, M14], [M20, M21, M22, M23, M24],
+              [M30, M31, M32, M33, M34],
+              [M40, M41, M42, M43, M44]]
+
     # Hand graphics
-    player1_l1 = Label(window, text=game.player_1.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=660)
-    player1_l2 = Label(window, text=game.player_1.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=660)
-    player1_l3 = Label(window, text=game.player_1.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=660)
-    player1_l4 = Label(window, text=game.player_1.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=660)
-    player1_l5 = Label(window, text=game.player_1.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=660)
-    player1_l6 = Label(window, text=game.player_1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=660)
-    player1_l7 = Label(window, text=game.player_1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=660)
+    player1_l1 = Label(window, text=game.player1.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=660)
+    player1_l2 = Label(window, text=game.player1.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=660)
+    player1_l3 = Label(window, text=game.player1.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=660)
+    player1_l4 = Label(window, text=game.player1.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=660)
+    player1_l5 = Label(window, text=game.player1.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=660)
+    player1_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=660)
+    player1_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=660)
 
     # player2_l1 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=320, y=660)
     # player2_l2 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=380, y=660)
@@ -141,96 +176,21 @@ def start_turn():
     # player2_l6 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=620, y=660)
     # player2_l7 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=680, y=660)
 
-    matrix = [[M00, M01, M02, M03, M04], [M10, M11, M12, M13, M14], [M20, M21, M22, M23, M24],
-              [M30, M31, M32, M33, M34],
-              [M40, M41, M42, M43, M44]]
-
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
     txtbox = Text(window, height=1, width=19)
     txtbox.pack()
     txtbox.place(x=10, y=130)
 
-    btnRead = Button(window, height=1, width=4, text="Enter", command=get_text)
+    btnRead = Button(window, height=1, width=4, text="Enter", command=get_text(txtbox))
     btnRead.pack()
     btnRead.place(x=70, y=160)
 
-    endturn = Button(window, height=1, width=4, text="End Turn", command=end_turn)
-    btnRead.pack()
-    btnRead.place(x=70, y=190)
-
-    # Check if the inputted word is valid then according to the starting point and direction, place each letter in the word
-
-    def directionfunction(direction):
-      """When the direction button on the interface is clicked, the function tells the starting point function which direction to place the letters
-      the backend function must trigger to identify if there is any space for the word.
-      """
-        if direction == 'up':
-            direction_str = 'up'
-        if direction == 'down':
-            direction_str = 'down'
-        if direction == 'right':
-            direction_str = 'right'
-        if direction == 'left':
-            direction_str = 'left'
-
-
-    def startingpoint(row, col):
-       """When a position on the grid is clicked the program places the letters starting from the point and in a direction stated above.
-             The backend must determine whether the position is valid according to the length of the word and direction"""
-       word = game.current_board.guesses[-1].upper()
-
-       g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, game.player1)
-
-       if g1.valid_word(game.current_board) is False:
-           game.current_board.guesses.remove(game.current_board.guesses[-1])
-           worderror = Tk()
-           worderror.title('Word Error')
-           worderror.geometry("330x90")
-           Label(worderror, text="The inputted word either does not exist in the Scrabble dictionary. \n"
-                                 "The letters in the word are not in your hand. \n"
-                                 "Or the word has already been used. ").place(x=0, y=0)
-           worderror.mainloop()
-
-       else:
-           if BoardClass().place_word(word, direction_str, (row, col)) is True:
-               if direction_str == 'right':
-                   for i in range(row, row + 1):
-                       for j in range(col, len(word) + col):
-                           matrix[i][j].config(text=word[j - col], bg='orange')
-
-               if direction_str == 'down':
-                   for i in range(row, len(word) + row):
-                       for j in range(col, col + 1):
-                           matrix[i][j].config(text=word[i - row], bg='orange')
-
-           else:
-               game.current_board.guesses.remove(game.current_board.guesses[-1])
-               error = Tk()
-               error.title('Error Message')
-               error.geometry("250x50")
-               Label(error, text="The inputted word does not fit on the board.\n"
-                                 "Try a different starting point and/or direction.").place(x=0, y=0)
-               error.mainloop()
-
-
-
-   def end_turn():
-      print('End turn here')
-
-   def get_text():
-       """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
-       result = txtbox.get("1.0", "end")
-       game.current_board.guesses.append(result)
-       for idx, ele in enumerate(game.current_board.guesses):
-           game.current_board.guesses[idx] = ele.replace('\n', '')
-       print(game.current_board.guesses)
-       txtbox.delete(1.0, 5.0)
-
+    endturn = Button(window, height=1, width=8, text="End Turn", command=end_turn)
+    endturn.pack()
+    endturn.place(x=70, y=190)
 
     window.mainloop()
-
-
 
 #Beginning window where users enter their usernames
 root = Tk()
