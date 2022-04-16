@@ -52,7 +52,6 @@ if __name__ == "__main__":
     game.game_start(p1_name, p2_name)
 
     while game.check_game_end() == False:
-        print(game.current_board.get_scoreboard()[3][4])
         print_array(game.current_board.board_letters)
         print("Player 1 hand: ", end="")
         print(game.player1.get_letters())
