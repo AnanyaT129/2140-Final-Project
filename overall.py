@@ -70,8 +70,8 @@ def end_turn():
 def get_text(txtbox):
     """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
     result = txtbox.get("1.0", "end")
+    print(result)
     game.current_board.guesses.append(result)
-    print(game.current_board.guesses)
     for idx, ele in enumerate(game.current_board.guesses):
         game.current_board.guesses[idx] = ele.replace('\n', '')
     print(game.current_board.guesses)

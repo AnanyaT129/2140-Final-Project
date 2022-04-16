@@ -2,6 +2,7 @@
 
 import random
 import numpy as np
+import math
 
 # global variables
 global BOARD_DIMENSION
@@ -105,15 +106,39 @@ class BoardClass:
         self.set_scores()
     
     def set_scores(self):
-        self.board_scores[0][0] = 3
-        self.board_scores[0][2] = 2
-        self.board_scores[0][4] = 3
-        self.board_scores[2][0] = 3
-        self.board_scores[2][2] = 3
-        self.board_scores[2][4] = 3
-        self.board_scores[4][0] = 3
-        self.board_scores[4][2] = 2
-        self.board_scores[4][4] = 3
+        # constants
+        dim = BOARD_DIMENSION - 1
+        half = math.ceil(dim / 2)
+        fourth = math.ceil (half / 2)
+
+        # diagonals
+        for x in range(BOARD_DIMENSION):
+            self.board_scores[x][x] = 2
+            self.board_scores[dim - x][x] = 2
+
+        # edges
+        self.board_scores[half][0] = 3
+        self.board_scores[0][half] = 3
+        self.board_scores[dim][half] = 3
+        self.board_scores[half][dim] = 3
+
+        for x in range(fourth):
+
+            # top triangle
+            self.board_scores[half - x][0 + fourth - x] = 3
+            self.board_scores[half + x][0 + fourth - x] = 3
+
+            # left triangle
+            self.board_scores[0 + fourth - x][half - x] = 3
+            self.board_scores[0 + fourth - x][half + x] = 3
+
+            # right triangle
+            self.board_scores[dim - fourth + x][half - x] = 3
+            self.board_scores[dim - fourth + x][half + x] = 3
+
+            # bottom triangle
+            self.board_scores[half - x][dim - fourth + x] = 3
+            self.board_scores[half + x][dim - fourth + x] = 3
 
     def place_word(self, word, direction, start):
         try:
