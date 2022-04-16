@@ -5,9 +5,9 @@ from scrabble_classes import PlayerClass, BagClass, BoardClass, WordClass
 from game_class import GameClass
 
 # global variables
-global game
 game = GameClass()
 
+x = None
 
 # helper functions
 def directionfunction(direction):
@@ -33,9 +33,26 @@ def directionfunction(direction):
 def startingpoint(row, col):
     """When a position on the grid is clicked the program places the letters starting from the point and in a direction stated above.
             The backend must determine whether the position is valid according to the length of the word and direction"""
+
     word = game.current_board.guesses[-1].upper()
 
-    g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, game.player1)
+    global x
+
+    if x is None:
+        x = game.player1
+
+    if x == 1:
+        x = game.player1
+
+    if x == 2:
+        x = game.player2
+
+    print(x)
+
+
+    g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, x)
+
+    print(x)
 
     if g1.valid_word(game.current_board) is False:
         game.current_board.guesses.remove(game.current_board.guesses[-1])
@@ -59,13 +76,19 @@ def startingpoint(row, col):
             index_error_message()
 
 
-def end_turn():
-    print('End turn here')
+def end_turn_player1():
+    global x
+    x = 2
+    print('End turn here for player 1')
+
+def end_turn_player2():
+    global x
+    x = 1
+    print('End turn here for player 2')
 
 def get_text(txtbox):
     """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
     result = txtbox.get("1.0", "end")
-    print(result)
     game.current_board.guesses.append(result)
     for idx, ele in enumerate(game.current_board.guesses):
         game.current_board.guesses[idx] = ele.replace('\n', '')
@@ -180,13 +203,13 @@ def start_turn():
     player1_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=660)
     player1_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=660)
 
-    # player2_l1 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=320, y=660)
-    # player2_l2 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=380, y=660)
-    # player2_l3 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=440, y=660)
-    # player2_l4 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=500, y=660)
-    # player2_l5 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=560, y=660)
-    # player2_l6 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=620, y=660)
-    # player2_l7 = Label(window, text= 'W', height=3, width=6, bg= 'red').place(x=680, y=660)
+    player2_l1 = Label(window, text=game.player2.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=700)
+    player2_l2 = Label(window, text=game.player2.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=700)
+    player2_l3 = Label(window, text=game.player2.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=700)
+    player2_l4 = Label(window, text=game.player2.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=700)
+    player2_l5 = Label(window, text=game.player2.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=700)
+    player2_l6 = Label(window, text=game.player2.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=700)
+    player2_l7 = Label(window, text=game.player2.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=700)
 
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
@@ -198,9 +221,13 @@ def start_turn():
     btnRead.pack()
     btnRead.place(x=70, y=160)
 
-    endturn = Button(window, height=1, width=8, text="End Turn", command=end_turn)
-    endturn.pack()
-    endturn.place(x=70, y=190)
+    player1_button = Button(window, height=2, width=8, text = player_1, command=end_turn_player1)
+    player1_button.pack()
+    player1_button.place(x=30, y=190)
+
+    player2_button = Button(window, height=2, width=8, text=player_2, command=end_turn_player2)
+    player2_button.pack()
+    player2_button.place(x=100, y=190)
 
     window.mainloop()
 
