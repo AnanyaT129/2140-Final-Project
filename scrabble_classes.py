@@ -5,8 +5,6 @@ import numpy as np
 import math
 
 # global variables
-global BOARD_DIMENSION
-BOARD_DIMENSION = 5
 global letter_value
 letter_value = {"A": 1, "B": 3, "C": 3, "D": 2, "E": 1, "F": 4, "G": 2, "H": 4, "I": 1, "J": 8, "K": 5, "L": 1, "M": 3,
                 "N": 1, "O": 1, "P": 3, "Q": 10, "R": 1, "S": 1., "T": 1, "U": 1, "V": 4, "W": 4, "X": 8, "Y": 4,
@@ -105,19 +103,20 @@ class BagClass:
 
 class BoardClass:
     def __init__(self):
-        self.board_letters = np.zeros((BOARD_DIMENSION, BOARD_DIMENSION), dtype=int).tolist()
-        self.board_scores = np.ones((BOARD_DIMENSION, BOARD_DIMENSION), dtype=int)
+        self.board_dimension = 15
+        self.board_letters = np.zeros((self.board_dimension, self.board_dimension), dtype=int).tolist()
+        self.board_scores = np.ones((self.board_dimension, self.board_dimension), dtype=int)
         self.guesses = []
         self.set_scores()
 
     def set_scores(self):
         # constants
-        dim = BOARD_DIMENSION - 1
+        dim = self.board_dimension - 1
         half = math.ceil(dim / 2)
         fourth = math.ceil (half / 2)
 
         # diagonals
-        for x in range(BOARD_DIMENSION):
+        for x in range(self.board_dimension):
             self.board_scores[x][x] = 2
             self.board_scores[dim - x][x] = 2
 
