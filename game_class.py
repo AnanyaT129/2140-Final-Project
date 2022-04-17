@@ -30,7 +30,8 @@ class GameClass:
     def game_turn(self, word, start, direction, player):
         entered_word = WordClass(word, start, direction, player)
         if ((self.current_board.guesses == [] and 
-            entered_word.valid_first_word(self.current_board)) or
+            entered_word.valid_first_word(self.current_board) and 
+            entered_word.valid_word(self.current_board)) or
             (self.current_board.guesses != [] and entered_word.valid_word(self.current_board))):
             points = entered_word.calculate_points(self.current_board)
             if points != 0:

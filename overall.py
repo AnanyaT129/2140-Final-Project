@@ -46,51 +46,49 @@ def startingpoint(row, col):
     if x == 2:
         x = game.player2
 
-    print(x)
-
     word = game.current_board.guesses[-1].upper()
     g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, x)
 
-    print(x)
-
     # if the word is valid
-    if (((game.current_board.guesses == [] and 
-        g1.valid_first_word(game.current_board)) or
-        (game.current_board.guesses != [] and g1.valid_word(game.current_board))) and
+    if (((len(game.current_board.get_guesses()) == 1 and 
+          g1.valid_first_word(game.current_board) and 
+          g1.valid_word(game.current_board)) or 
+         (len(game.current_board.get_guesses()) > 1 and g1.valid_word(game.current_board))) and
         game.current_board.place_word(word, direction_str, (row, col))):
 
+        # place the word on the board
+        if direction_str == 'right':
+            for i in range(row, row + 1):
+                for j in range(col, len(word) + col):
+                    matrix[i][j].config(text=word[j - col], bg='orange')
+
+        if direction_str == 'down':
+            for i in range(len(word)):
+                matrix[row + i][col].config(text=word[i], bg='orange')
+        
+        # place the word on the backend board
+        game.current_board.place_word(word, direction_str, (row, col))
+
+        # update player score
         # check that the word has a nonzero point value
         points = g1.calculate_points(game.current_board)
-        if points != 0:
-            # place the word on the board
-            if direction_str == 'right':
-                for i in range(row, row + 1):
-                    for j in range(col, len(word) + col):
-                        matrix[i][j].config(text=word[j - col], bg='orange')
+        x.update_score(points)
+        
+        # replenish player letters
+        used_letters = g1.return_used_letters()
+        for l in used_letters:
+            x.remove_letter(l)
+        x.replenish_letters(game.bag)
 
-            if direction_str == 'down':
-                for i in range(row, len(word) + row):
-                    for j in range(col, col + 1):
-                        matrix[i][j].config(text=word[i - row], bg='orange')
-            
-            # place the word on the backend board
-            game.current_board.place_word(word, direction_str, (row, col))
-
-            # update player score
-            x.update_score(points)
-            
-            # replenish player letters
-            used_letters = g1.return_used_letters()
-            for l in used_letters:
-                x.remove_letter(x)
-            x.replenish_letters(game.bag)
-
-    # checks errors to display accurate messages
     else:
+        # remove guess from list of guesses
         game.current_board.guesses.remove(game.current_board.guesses[-1])
-        if (game.current_board.guesses == [] and g1.valid_first_word(game.current_board)) is False:
+        print(game.current_board.guesses)
+
+        # checks errors to display accurate messages
+        if game.current_board.get_guesses() == [] and (g1.valid_first_word(game.current_board) is False):
             first_word_error_message()
-        elif (game.current_board.guesses != [] and g1.valid_word(game.current_board)) is False:
+        elif g1.valid_word(game.current_board) is False:
             if g1.check_if_word_in_hand(game.current_board) == 'IndexError':
                 index_error_message()
             else:
@@ -177,6 +175,7 @@ def start_turn():
     player_2 = player2_textbox.get("1.0", "end")
 
     game.game_start(player_1, player_2)
+    print(game.current_board.get_guesses())
 
     window = Tk()
     window.title('Scrabble')
@@ -202,7 +201,7 @@ def start_turn():
         matrix.append([])
         for b in range(game.current_board.board_dimension):
             score = str(game.current_board.get_scoreboard()[a][b]) + "x"
-            M = Button(window, text=score, command=lambda: startingpoint(a, b), height=2, width=4, bg='white')
+            M = Button(window, text=score, command=lambda c = a, d = b: startingpoint(c, d), height=2, width=4, bg='white')
             M.place(x=(200 + (40 * b)), y=(100 + (43 * a)))
             matrix[a].append(M)
 
