@@ -8,6 +8,7 @@ from game_class import GameClass
 game = GameClass()
 
 x = None
+z = None
 
 
 # helper functions
@@ -36,25 +37,26 @@ def startingpoint(row, col):
             The backend must determine whether the position is valid according to the length of the word and direction"""
 
     global x
+    global z
 
     if x is None:
-        x = game.player1
+        z = game.player1
 
     if x == 1:
-        x = game.player1
+        z = game.player1
 
     if x == 2:
-        x = game.player2
+        z = game.player2
 
     word = game.current_board.guesses[-1].upper()
-    g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, x)
+    g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, z)
 
     # if the word is valid
-    if (((len(game.current_board.get_guesses()) == 1 and 
-          g1.valid_first_word(game.current_board) and 
-          g1.valid_word(game.current_board)) or 
+    if (((len(game.current_board.get_guesses()) == 1 and
+          g1.valid_first_word(game.current_board) and
+          g1.valid_word(game.current_board)) or
          (len(game.current_board.get_guesses()) > 1 and g1.valid_word(game.current_board))) and
-        game.current_board.place_word(word, direction_str, (row, col))):
+            game.current_board.place_word(word, direction_str, (row, col))):
 
         # place the word on the board
         if direction_str == 'right':
@@ -65,20 +67,20 @@ def startingpoint(row, col):
         if direction_str == 'down':
             for i in range(len(word)):
                 matrix[row + i][col].config(text=word[i], bg='orange')
-        
+
         # place the word on the backend board
         game.current_board.place_word(word, direction_str, (row, col))
 
         # update player score
         # check that the word has a nonzero point value
         points = g1.calculate_points(game.current_board)
-        x.update_score(points)
-        
-        # replenish player letters
+        z.update_score(points)
+
+    # replenish player letters
         used_letters = g1.return_used_letters()
         for l in used_letters:
-            x.remove_letter(l)
-        x.replenish_letters(game.bag)
+            z.remove_letter(l)
+        z.replenish_letters(game.bag)
 
     else:
         # remove guess from list of guesses
@@ -102,11 +104,29 @@ def end_turn_player1():
     x = 2
     print('End turn here for player 1')
 
+    letter_matrix[0].config(text=game.player2.get_letters()[0])
+    letter_matrix[1].config(text=game.player2.get_letters()[1])
+    letter_matrix[2].config(text=game.player2.get_letters()[2])
+    letter_matrix[3].config(text=game.player2.get_letters()[3])
+    letter_matrix[4].config(text=game.player2.get_letters()[4])
+    letter_matrix[5].config(text=game.player2.get_letters()[5])
+    letter_matrix[6].config(text=game.player2.get_letters()[6])
+    letter_matrix[7].config(text=f"TURN: {game.get_p2_name()}")
+    letter_matrix[8].config(text=f" {game.get_p2_name()}: {game.player2.get_score()}")
 
 def end_turn_player2():
     global x
     x = 1
     print('End turn here for player 2')
+    letter_matrix[0].config(text=game.player1.get_letters()[0])
+    letter_matrix[1].config(text=game.player1.get_letters()[1])
+    letter_matrix[2].config(text=game.player1.get_letters()[2])
+    letter_matrix[3].config(text=game.player1.get_letters()[3])
+    letter_matrix[4].config(text=game.player1.get_letters()[4])
+    letter_matrix[5].config(text=game.player1.get_letters()[5])
+    letter_matrix[6].config(text=game.player1.get_letters()[6])
+    letter_matrix[7].config(text=f"TURN: {game.get_p1_name()}")
+    letter_matrix[8].config(text=f" {game.get_p1_name()}: {game.player1.get_score()}")
 
 
 def get_text(txtbox):
@@ -158,7 +178,6 @@ def first_word_error_message():
                       "Must be placed in the middle row or column. ").place(x=0, y=0)
     error.mainloop()
 
-
 def skip(player):
     if player == game.player1:
         if game.skipped_turns[0] > 2:
@@ -203,39 +222,35 @@ def start_turn():
         matrix.append([])
         for b in range(game.current_board.board_dimension):
             score = str(game.current_board.get_scoreboard()[a][b]) + "x"
-            M = Button(window, text=score, command=lambda c = a, d = b: startingpoint(c, d), height=2, width=4, bg='white')
+            M = Button(window, text=score, command=lambda c=a, d=b: startingpoint(c, d), height=2, width=4, bg='white')
             M.place(x=(200 + (40 * b)), y=(100 + (43 * a)))
             matrix[a].append(M)
 
     # Hand graphics
+    global letter_matrix
 
-    if x is None or x == game.player1:
-        player1_l1 = Label(window, text=game.player1.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
-        player1_l2 = Label(window, text=game.player1.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
-        player1_l3 = Label(window, text=game.player1.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=17)
-        player1_l4 = Label(window, text=game.player1.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=17)
-        player1_l5 = Label(window, text=game.player1.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=17)
-        player1_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=17)
-        player1_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=17)
+    player_l1 = Label(window, text=game.player1.get_letters()[0], height=3, width=6, bg='red')
+    player_l1.place(x=320, y=17)
 
-        displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red').place(x=800, y=17)
+    player_l2 = Label(window, text=game.player1.get_letters()[1], height=3, width=6, bg='red')
+    player_l2.place(x=380, y=17)
 
-        player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10,
-                               bg='red').place(x=800, y=60)
+    player_l3 = Label(window, text=game.player1.get_letters()[2], height=3, width=6, bg='red')
+    player_l3.place(x=440, y=17)
+    player_l4 = Label(window, text=game.player1.get_letters()[3], height=3, width=6, bg='red')
+    player_l4.place(x=500, y=17)
+    player_l5 = Label(window, text=game.player1.get_letters()[4], height=3, width=6, bg='red')
+    player_l5.place(x=560, y=17)
+    player_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red')
+    player_l6.place(x=620, y=17)
+    player_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red')
+    player_l7.place(x=680, y=17)
+    displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red')
+    displays_turn.place(x=800, y=17)
+    player_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red')
+    player_points.place(x=800, y=60)
 
-    if x == game.player2:
-        player2_l1 = Label(window, text=game.player2.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
-        player2_l2 = Label(window, text=game.player2.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
-        player2_l3 = Label(window, text=game.player2.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=17)
-        player2_l4 = Label(window, text=game.player2.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=17)
-        player2_l5 = Label(window, text=game.player2.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=17)
-        player2_l6 = Label(window, text=game.player2.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=17)
-        player2_l7 = Label(window, text=game.player2.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=17)
-
-        displays2_turn = Label(window, text=f"TURN: {player_2}", height=1, width=10, bg='red').place(x=800, y=17)
-
-        player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10,
-                               bg='red').place(x=800, y=60)
+    letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn, player_points]
 
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
