@@ -9,6 +9,7 @@ game = GameClass()
 
 x = None
 
+
 # helper functions
 def directionfunction(direction):
     """When the direction button on the interface is clicked, the function tells the starting point function which direction to place the letters
@@ -97,15 +98,18 @@ def startingpoint(row, col):
         else:
             index_error_message()
 
+
 def end_turn_player1():
     global x
     x = 2
     print('End turn here for player 1')
 
+
 def end_turn_player2():
     global x
     x = 1
     print('End turn here for player 2')
+
 
 def get_text(txtbox):
     """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
@@ -115,6 +119,7 @@ def get_text(txtbox):
         game.current_board.guesses[idx] = ele.replace('\n', '')
     print(game.current_board.guesses)
     txtbox.delete(1.0, 5.0)
+
 
 # creates a board, interactive textbox where user inputs a word, and buttons which determine direction word is placed
 # starting point must reference position on list
@@ -127,6 +132,7 @@ def index_error_message():
                       "Try a different starting point and/or direction.").place(x=0, y=0)
     error.mainloop()
 
+
 def word_error_message():
     worderror = Tk()
     worderror.title('Word Error')
@@ -135,6 +141,7 @@ def word_error_message():
                           "The letters in the word are not in your hand. \n"
                           "Or the word has already been used. ").place(x=0, y=0)
     worderror.mainloop()
+
 
 def skip_error_message():
     error = Tk()
@@ -164,6 +171,7 @@ def skip(player):
         else:
             game.skipped_turns[1] += 1
 
+
 def start_turn():
     player_1 = player1_textbox.get("1.0", "end")
     player_2 = player2_textbox.get("1.0", "end")
@@ -189,7 +197,7 @@ def start_turn():
     # Position buttons
     global matrix
     matrix = []
-    
+
     for a in range(game.current_board.board_dimension):
         matrix.append([])
         for b in range(game.current_board.board_dimension):
@@ -199,29 +207,41 @@ def start_turn():
             matrix[a].append(M)
 
     # Hand graphics
-    player1_l1 = Label(window, text=game.player1.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
-    player1_l2 = Label(window, text=game.player1.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
-    player1_l3 = Label(window, text=game.player1.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=17)
-    player1_l4 = Label(window, text=game.player1.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=17)
-    player1_l5 = Label(window, text=game.player1.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=17)
-    player1_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=17)
-    player1_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=17)
 
-    player2_l1 = Label(window, text=game.player2.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=700)
-    player2_l2 = Label(window, text=game.player2.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=700)
-    player2_l3 = Label(window, text=game.player2.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=700)
-    player2_l4 = Label(window, text=game.player2.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=700)
-    player2_l5 = Label(window, text=game.player2.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=700)
-    player2_l6 = Label(window, text=game.player2.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=700)
-    player2_l7 = Label(window, text=game.player2.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=700)
+    if x is None or x == game.player1:
+        player1_l1 = Label(window, text=game.player1.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
+        player1_l2 = Label(window, text=game.player1.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
+        player1_l3 = Label(window, text=game.player1.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=17)
+        player1_l4 = Label(window, text=game.player1.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=17)
+        player1_l5 = Label(window, text=game.player1.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=17)
+        player1_l6 = Label(window, text=game.player1.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=17)
+        player1_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=17)
+
+        displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red').place(x=800, y=17)
+
+        player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red').place(x=800, y=60)
+
+    if x == game.player2:
+        player2_l1 = Label(window, text=game.player2.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
+        player2_l2 = Label(window, text=game.player2.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
+        player2_l3 = Label(window, text=game.player2.get_letters()[2], height=3, width=6, bg='red').place(x=440, y=17)
+        player2_l4 = Label(window, text=game.player2.get_letters()[3], height=3, width=6, bg='red').place(x=500, y=17)
+        player2_l5 = Label(window, text=game.player2.get_letters()[4], height=3, width=6, bg='red').place(x=560, y=17)
+        player2_l6 = Label(window, text=game.player2.get_letters()[5], height=3, width=6, bg='red').place(x=620, y=17)
+        player2_l7 = Label(window, text=game.player2.get_letters()[6], height=3, width=6, bg='red').place(x=680, y=17)
+
+        displays2_turn = Label(window, text=f"TURN: {player_2}", height=1, width=10, bg='red').place(x=800, y=17)
+
+        player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red').place(x=800, y=60)
 
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
+
 
     txtbox = Text(window, height=1, width=19)
     txtbox.pack()
     txtbox.place(x=10, y=130)
 
-    btnRead = Button(window, height=1, width=4, text="Enter", command= lambda: get_text(txtbox))
+    btnRead = Button(window, height=1, width=4, text="Enter", command=lambda: get_text(txtbox))
     btnRead.pack()
     btnRead.place(x=70, y=160)
 
@@ -235,22 +255,23 @@ def start_turn():
 
     player1_button = Button(window, height=2, width=8, text = player_1, command=end_turn_player1)
     player1_button.pack()
-    player1_button.place(x=30, y=190)
+    player1_button.place(x=10, y=190)
 
-    player2_button = Button(window, height=2, width=8, text=player_2, command=end_turn_player2)
+    player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=end_turn_player2)
     player2_button.pack()
     player2_button.place(x=100, y=190)
 
     window.mainloop()
 
-#Beginning window where users enter their usernames
+
+# Beginning window where users enter their usernames
 root = Tk()
 root.geometry("250x170")
-T = Text(root, height = 5, width = 52)
+T = Text(root, height=5, width=52)
 
-player1_name = Label(root, text = "player1: ").place(x = 20, y = 48)
-player2_name = Label(root, text = "player2: ").place(x = 20, y = 65)
-Instruct = Label(root, text = "Enter Usernames").place(x = 70, y = 25)
+player1_name = Label(root, text="player1: ").place(x=20, y=48)
+player2_name = Label(root, text="player2: ").place(x=20, y=65)
+Instruct = Label(root, text="Enter Usernames").place(x=70, y=25)
 
 player1_textbox = Text(root, height=1, width=15)
 player1_textbox.pack()
@@ -261,6 +282,6 @@ player2_textbox.pack()
 player2_textbox.place(x=65, y=65)
 player2 = player2_textbox.get("1.0", "end")
 
-enter_names = Button(root, text="START", command= start_turn, height= 1, width = 5, bg='white').place(x = 100, y = 90)
+enter_names = Button(root, text="START", command=start_turn, height=1, width=5, bg='white').place(x=100, y=90)
 T.insert(tk.END, 'Enter the player1 and player2 information and click START')
 root.mainloop()
