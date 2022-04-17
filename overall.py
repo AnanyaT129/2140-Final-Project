@@ -189,6 +189,8 @@ def start_turn():
 
         displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red').place(x=800, y=17)
 
+        player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red').place(x=800, y=60)
+
     if x == game.player2:
         player2_l1 = Label(window, text=game.player2.get_letters()[0], height=3, width=6, bg='red').place(x=320, y=17)
         player2_l2 = Label(window, text=game.player2.get_letters()[1], height=3, width=6, bg='red').place(x=380, y=17)
@@ -200,10 +202,10 @@ def start_turn():
 
         displays2_turn = Label(window, text=f"TURN: {player_2}", height=1, width=10, bg='red').place(x=800, y=17)
 
+        player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red').place(x=800, y=60)
+
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
-    player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red').place(x=800, y=60)
-    player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red').place(x=800, y=100)
 
     txtbox = Text(window, height=1, width=19)
     txtbox.pack()
@@ -221,13 +223,13 @@ def start_turn():
     # player2skip.pack()
     # player2skip.place(x=90, y=190)
 
-    player1_button = Button(window, height=2, width=8, text=player_1, command=end_turn_player1)
+    player1_button = Button(window, height=3, width=10, text=f'End turn for \n{player_1}', command=end_turn_player1)
     player1_button.pack()
-    player1_button.place(x=20, y=190)
+    player1_button.place(x=10, y=190)
 
-    player2_button = Button(window, height=2, width=8, text=player_2, command=end_turn_player2)
+    player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=end_turn_player2)
     player2_button.pack()
-    player2_button.place(x=90, y=190)
+    player2_button.place(x=100, y=190)
 
     window.mainloop()
 
