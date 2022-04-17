@@ -16,6 +16,7 @@ class GameClass:
         self.bag = None
         self.player1_name = None
         self.player2_name = None
+        self.winner = None
 
 
     def get_p1_name(self):
@@ -53,6 +54,14 @@ class GameClass:
                 for x in used_letters:
                     player.remove_letter(x)
                 player.replenish_letters(self.bag)
+    
+    def update_winner(self):
+        if self.player1.get_score() > self.player2.get_score():
+            self.winner = self.player1
+        elif self.player1.get_score() < self.player2.get_score():
+            self.winner = self.player2
+        else:
+            self.winner = None
 
 
 def print_array(arr):

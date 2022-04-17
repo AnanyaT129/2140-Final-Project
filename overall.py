@@ -76,11 +76,17 @@ def startingpoint(row, col):
         points = g1.calculate_points(game.current_board)
         z.update_score(points)
 
-    # replenish player letters
+        # replenish player letters
         used_letters = g1.return_used_letters()
         for l in used_letters:
             z.remove_letter(l)
         z.replenish_letters(game.bag)
+
+        game.update_winner()
+
+        # check for game end
+        if game.check_game_end():
+            end_game()
 
     else:
         # remove guess from list of guesses
@@ -128,6 +134,29 @@ def end_turn_player2():
     letter_matrix[7].config(text=f"TURN: {game.get_p1_name()}")
     letter_matrix[8].config(text=f" {game.get_p1_name()}: {game.player1.get_score()}")
 
+def end_all():
+    end.destroy()
+    window.destroy()
+    root.destroy()
+
+def end_game():
+    global end
+    end = Tk()
+    end.title('End Game Screen')
+    end.geometry("250x100")
+    Label(end, text=f'The game has ended! \n'
+                     'The winner is {game.winner} !!').place(x=0, y=0)
+    close = Button(end, text="Close", command=end_all, height=2, width=4, bg='white')
+    close.place(x=30, y=40)
+    end.mainloop()
+
+def forfeit_player1():
+    game.winner = game.player2
+    end_game()
+
+def forfeit_player2():
+    game.winner = game.player1
+    end_game()
 
 def get_text(txtbox):
     """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
@@ -180,15 +209,17 @@ def first_word_error_message():
 
 def skip(player):
     if player == game.player1:
-        if game.skipped_turns[0] > 2:
+        if game.skipped_turns[0] >= 2:
             skip_error_message()
         else:
             game.skipped_turns[0] += 1
     elif player == game.player2:
-        if game.skipped_turns[1] > 2:
+        if game.skipped_turns[1] >= 2:
             skip_error_message()
         else:
             game.skipped_turns[1] += 1
+    if game.skipped_turns[0] >= 2 and game.skipped_turns[1] >= 2:
+        end_game()
 
 
 def start_turn():
@@ -198,6 +229,7 @@ def start_turn():
     game.game_start(player_1, player_2)
     print(game.current_board.get_guesses())
 
+    global window
     window = Tk()
     window.title('Scrabble')
     window.geometry("1000x1000")
@@ -247,10 +279,14 @@ def start_turn():
     player_l7.place(x=680, y=17)
     displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red')
     displays_turn.place(x=800, y=17)
-    player_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red')
-    player_points.place(x=800, y=60)
+    score_label = Label(window, text="SCORES:", height=2, width=10, bg='red')
+    score_label.place(x=800, y=60)
+    player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red')
+    player1_points.place(x=800, y=100)
+    player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red')
+    player2_points.place(x=800, y=140)
 
-    letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn, player_points]
+    letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn, score_label, player1_points, player2_points]
 
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
@@ -277,6 +313,14 @@ def start_turn():
     player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=end_turn_player2)
     player2_button.pack()
     player2_button.place(x=90, y=190)
+
+    player1_forfeit = Button(window, height=3, width=10, text=f'{player_1} \nforfeit', command=forfeit_player1)
+    player1_forfeit.pack()
+    player1_forfeit.place(x=10, y=310)
+
+    player2_forfeit = Button(window, height=3, width=10, text=f'{player_2} \nforfeit', command=forfeit_player2)
+    player2_forfeit.pack()
+    player2_forfeit.place(x=90, y=310)
 
     window.mainloop()
 
