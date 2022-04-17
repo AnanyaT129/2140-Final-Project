@@ -156,6 +156,7 @@ class BoardClass:
             return True
         except IndexError:
             print("The word you inputted is either too long or the starting point is invalid.")
+            return False
 
 
     def get_guesses(self):

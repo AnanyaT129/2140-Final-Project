@@ -34,8 +34,6 @@ def startingpoint(row, col):
     """When a position on the grid is clicked the program places the letters starting from the point and in a direction stated above.
             The backend must determine whether the position is valid according to the length of the word and direction"""
 
-    word = game.current_board.guesses[-1].upper()
-
     global x
 
     if x is None:
@@ -49,19 +47,21 @@ def startingpoint(row, col):
 
     print(x)
 
-
+    word = game.current_board.guesses[-1].upper()
     g1 = WordClass(game.current_board.guesses[-1], (row, col), direction_str, x)
 
     print(x)
 
-    if g1.valid_word(game.current_board) is False:
-        game.current_board.guesses.remove(game.current_board.guesses[-1])
-        if g1.check_if_word_in_hand(game.current_board) == 'IndexError':
-            index_error_message()
-        else:
-            word_error_message()
-    else:
-        if BoardClass().place_word(word, direction_str, (row, col)) is True:
+    # if the word is valid
+    if (((game.current_board.guesses == [] and 
+        g1.valid_first_word(game.current_board)) or
+        (game.current_board.guesses != [] and g1.valid_word(game.current_board))) and
+        game.current_board.place_word(word, direction_str, (row, col))):
+
+        # check that the word has a nonzero point value
+        points = g1.calculate_points(game.current_board)
+        if points != 0:
+            # place the word on the board
             if direction_str == 'right':
                 for i in range(row, row + 1):
                     for j in range(col, len(word) + col):
@@ -71,8 +71,30 @@ def startingpoint(row, col):
                 for i in range(row, len(word) + row):
                     for j in range(col, col + 1):
                         matrix[i][j].config(text=word[i - row], bg='orange')
+            
+            # place the word on the backend board
+            game.current_board.place_word(word, direction_str, (row, col))
+
+            # update player score
+            x.update_score(points)
+            
+            # replenish player letters
+            used_letters = g1.return_used_letters()
+            for l in used_letters:
+                x.remove_letter(x)
+            x.replenish_letters(game.bag)
+
+    # checks errors to display accurate messages
+    else:
+        game.current_board.guesses.remove(game.current_board.guesses[-1])
+        if (game.current_board.guesses == [] and g1.valid_first_word(game.current_board)) is False:
+            first_word_error_message()
+        elif (game.current_board.guesses != [] and g1.valid_word(game.current_board)) is False:
+            if g1.check_if_word_in_hand(game.current_board) == 'IndexError':
+                index_error_message()
+            else:
+                word_error_message()
         else:
-            game.current_board.guesses.remove(game.current_board.guesses[-1])
             index_error_message()
 
 def end_turn_player1():
@@ -120,6 +142,14 @@ def skip_error_message():
     error.geometry("250x50")
     Label(error, text="The player does not have any skips left. \n"
                       "If you cannot play a word, forfeit the game. ").place(x=0, y=0)
+    error.mainloop()
+
+def first_word_error_message():
+    error = Tk()
+    error.title('Error Message')
+    error.geometry("250x50")
+    Label(error, text="Invalid first word.\n"
+                      "Must be placed in the middle row or column. ").place(x=0, y=0)
     error.mainloop()
 
 def skip(player):
@@ -197,12 +227,12 @@ def start_turn():
 
     player1skip = Button(window, height=1, width=10, text="Player 1 Skip", command= lambda: skip(game.player1))
     player1skip.pack()
-    player1skip.place(x=10, y=190)
+    player1skip.place(x=10, y=240)
 
     player2skip = Button(window, height=1, width=10, text="Player 2 Skip", command= lambda: skip(game.player2))
     player2skip.pack()
-    player2skip.place(x=90, y=190)
-    
+    player2skip.place(x=90, y=240)
+
     player1_button = Button(window, height=2, width=8, text = player_1, command=end_turn_player1)
     player1_button.pack()
     player1_button.place(x=30, y=190)
