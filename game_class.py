@@ -64,9 +64,9 @@ class GameClass:
             self.winner = None
 
 
-def print_array(arr):
-    for x in range(len(arr)):
-        print(arr[x])
+    def print_array(arr):
+        for x in range(len(arr)):
+            print(arr[x])
 
 
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     game.game_start(p1_name, p2_name)
 
     while game.check_game_end() == False:
-        print_array(game.current_board.board_letters)
+        GameClass.print_array(game.current_board.board_letters)
         print("Player 1 hand: ", end="")
         print(game.player1.get_letters())
         i_word = input("Enter word to play: ")
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         start = (x, y)
         direction = input("Enter down or right")
         game.game_turn(i_word, start, direction, game.player1)
-        print_array(game.current_board.board_letters)
+        GameClass.print_array(game.current_board.board_letters)
         print("Player 1 score: ", end="")
         print(game.player1.get_score())
         print("Player 2 hand: ", end="")
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         start = (x, y)
         direction = input("Enter down or right")
         game.game_turn(i_word, start, direction, game.player2)
-        print_array(game.current_board.board_letters)
+        GameClass.print_array(game.current_board.board_letters)
         print("Player 2 score: ", end="")
         print(game.player2.get_score())
         print("Scores: ", end="")

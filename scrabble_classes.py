@@ -150,11 +150,11 @@ class BoardClass:
             if direction == "down":
                 for x in range(len(word)):
                     self.board_letters[start[1] + x][start[0]] = list_of_letters[x]
-                    return True
+                return True
             elif direction == "right":
                 for x in range(len(word)):
                     self.board_letters[start[1]][start[0] + x] = list_of_letters[x]
-                    return True
+                return True
         except IndexError as e:
             print(e)
             print("The word you inputted is either too long or the starting point is invalid.")
@@ -247,8 +247,7 @@ class WordClass:
     def valid_word(self, board):
         if (WordClass.word_checker(self) and
                 WordClass.check_repeat(self, board) and
-                WordClass.check_if_word_in_hand(self, board) and
-                len(self.word) > 7 - len(self.player.get_letters())):
+                WordClass.check_if_word_in_hand(self, board)):
             return True
         else:
             return False

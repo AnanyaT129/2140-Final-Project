@@ -55,8 +55,11 @@ def startingpoint(row, col):
     if (((len(game.current_board.get_guesses()) == 1 and
           g1.valid_first_word(game.current_board) and
           g1.valid_word(game.current_board)) or
-         (len(game.current_board.get_guesses()) > 1 and g1.valid_word(game.current_board))) and
-            game.current_board.place_word(word, direction_str, (row, col))):
+         (len(game.current_board.get_guesses()) > 1 and g1.valid_word(game.current_board) and
+              len(g1.return_used_letters()) < len(word))) and
+            game.current_board.place_word(word, direction_str, (col, row))):
+
+        GameClass.print_array(game.current_board.board_letters)
 
         # place the word on the board
         if direction_str == 'right':
@@ -69,7 +72,7 @@ def startingpoint(row, col):
                 matrix[row + i][col].config(text=word[i], bg='orange')
 
         # place the word on the backend board
-        game.current_board.place_word(word, direction_str, (row, col))
+        # game.current_board.place_word(word, direction_str, (col, row))
 
         # update player score
         # check that the word has a nonzero point value
@@ -118,7 +121,8 @@ def end_turn_player1():
     letter_matrix[5].config(text=game.player2.get_letters()[5])
     letter_matrix[6].config(text=game.player2.get_letters()[6])
     letter_matrix[7].config(text=f"TURN: {game.get_p2_name()}")
-    letter_matrix[8].config(text=f" {game.get_p2_name()}: {game.player2.get_score()}")
+    letter_matrix[8].config(text=f" {game.player1_name()}: {game.player1.get_score()}")
+    letter_matrix[9].config(text=f" {game.player2_name()}: {game.player2.get_score()}")
 
 def end_turn_player2():
     global x
@@ -132,7 +136,8 @@ def end_turn_player2():
     letter_matrix[5].config(text=game.player1.get_letters()[5])
     letter_matrix[6].config(text=game.player1.get_letters()[6])
     letter_matrix[7].config(text=f"TURN: {game.get_p1_name()}")
-    letter_matrix[8].config(text=f" {game.get_p1_name()}: {game.player1.get_score()}")
+    letter_matrix[8].config(text=f" {game.player1_name()}: {game.player1.get_score()}")
+    letter_matrix[9].config(text=f" {game.player2_name()}: {game.player2.get_score()}")
 
 def end_all():
     end.destroy()
@@ -286,7 +291,7 @@ def start_turn():
     player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red')
     player2_points.place(x=800, y=140)
 
-    letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn, score_label, player1_points, player2_points]
+    letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn, player1_points, player2_points]
 
     # use textbox to enter input word, check if it is valid and then change the appearance of the button so that it shows the letter problem
 
