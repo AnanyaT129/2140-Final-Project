@@ -144,24 +144,25 @@ def end_all():
     window.destroy()
     root.destroy()
 
+def forfeit_player1():
+    game.winner = game.get_p2_name()
+    end_game()
+
+def forfeit_player2():
+    game.winner = game.get_p1_name()
+    end_game()
+
+
 def end_game():
     global end
     end = Tk()
     end.title('End Game Screen')
-    end.geometry("250x100")
+    end.geometry("125x100")
     Label(end, text=f'The game has ended! \n'
-                     'The winner is {game.winner} !!').place(x=0, y=0)
-    close = Button(end, text="Close", command=end_all, height=2, width=4, bg='white')
-    close.place(x=30, y=40)
+                    f'The winner is {game.winner}!!').place(x=0, y=0)
+    close = Button(end, text="Close", command=end_all, height=1, width=4, bg='white')
+    close.place(x=40, y=60)
     end.mainloop()
-
-def forfeit_player1():
-    game.winner = game.player2
-    end_game()
-
-def forfeit_player2():
-    game.winner = game.player1
-    end_game()
 
 def get_text(txtbox):
     """This function receives the words entered into the text box and appends them to a list, backend must check if the word is valid"""
