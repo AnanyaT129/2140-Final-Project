@@ -121,8 +121,8 @@ def end_turn_player1():
     letter_matrix[5].config(text=game.player2.get_letters()[5])
     letter_matrix[6].config(text=game.player2.get_letters()[6])
     letter_matrix[7].config(text=f"TURN: {game.get_p2_name()}")
-    letter_matrix[8].config(text=f" {game.player1_name()}: {game.player1.get_score()}")
-    letter_matrix[9].config(text=f" {game.player2_name()}: {game.player2.get_score()}")
+    letter_matrix[8].config(text=f" {game.get_p1_name()}: {game.player1.get_score()}")
+    letter_matrix[9].config(text=f" {game.get_p2_name()}: {game.player2.get_score()}")
 
 def end_turn_player2():
     global x
@@ -136,8 +136,8 @@ def end_turn_player2():
     letter_matrix[5].config(text=game.player1.get_letters()[5])
     letter_matrix[6].config(text=game.player1.get_letters()[6])
     letter_matrix[7].config(text=f"TURN: {game.get_p1_name()}")
-    letter_matrix[8].config(text=f" {game.player1_name()}: {game.player1.get_score()}")
-    letter_matrix[9].config(text=f" {game.player2_name()}: {game.player2.get_score()}")
+    letter_matrix[8].config(text=f" {game.get_p1_name()}: {game.player1.get_score()}")
+    letter_matrix[9].config(text=f" {game.get_p2_name()}: {game.player2.get_score()}")
 
 def end_all():
     end.destroy()
