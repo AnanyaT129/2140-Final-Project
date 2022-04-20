@@ -57,7 +57,7 @@ class BagClass:
         self.initialize()
 
     def initialize(self):
-        self.bag.extend(["A"] * 9)
+        self.bag.extend(["A"] * 10)
         self.bag.extend(["B"] * 2)
         self.bag.extend(["C"] * 2)
         self.bag.extend(["D"] * 4)
@@ -77,13 +77,12 @@ class BagClass:
         self.bag.extend(["R"] * 6)
         self.bag.extend(["S"] * 4)
         self.bag.extend(["T"] * 6)
-        self.bag.extend(["U"] * 4)
+        self.bag.extend(["U"] * 5)
         self.bag.extend(["V"] * 2)
         self.bag.extend(["W"] * 2)
         self.bag.extend(["X"] * 1)
         self.bag.extend(["Y"] * 2)
         self.bag.extend(["Z"] * 1)
-        self.bag.extend(["BLANK"] * 2)
 
         random.shuffle(self.bag)
 
