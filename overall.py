@@ -99,13 +99,19 @@ def startingpoint(row, col):
         # checks errors to display accurate messages
         if game.current_board.get_guesses() == [] and (g1.valid_first_word(game.current_board) is False):
             first_word_error_message()
+
+
         elif g1.valid_word(game.current_board) is False:
             if g1.check_if_word_in_hand(game.current_board) == 'IndexError':
                 index_error_message()
+
             else:
                 word_error_message()
+
         else:
             index_error_message()
+
+
 
 
 def end_turn_player1():
@@ -243,14 +249,10 @@ def start_turn():
     # Graphical setup of the game
 
     # Direction buttons
-    up = Button(window, text="↑", command=lambda: directionfunction('up'), height=2, width=4, bg='red')
-    up.place(x=70, y=17)
     down = Button(window, text="↓", command=lambda: directionfunction('down'), height=2, width=4, bg='red')
     down.place(x=70, y=60)
     right = Button(window, text="→", command=lambda: directionfunction('right'), height=2, width=4, bg='red')
     right.place(x=110, y=60)
-    left = Button(window, text="←", command=lambda: directionfunction('left'), height=2, width=4, bg='red')
-    left.place(x=30, y=60)
 
     # Position buttons
     global matrix
@@ -351,4 +353,17 @@ player2 = player2_textbox.get("1.0", "end")
 
 enter_names = Button(root, text="START", command=start_turn, height=1, width=5, bg='white').place(x=100, y=90)
 T.insert(tk.END, 'Enter the player1 and player2 information and click START')
+
+instruct = Tk()
+instruct.title('README')
+instruct.geometry("260x200")
+Label(instruct, text="1) Type in a word and click enter, \n"
+                      "2) Select a direction \n"
+                     "3) Select a spot on the board to place the word. \n"
+                     "4) Must click end turn \n"
+                     "\n"
+                     "Scores are displayed on the right for both players \n"
+                     "The letters on the top represent your hand.").place(x=0, y=0)
+instruct.mainloop()
+
 root.mainloop()
