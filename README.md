@@ -15,7 +15,8 @@ Scrabble is a board game in which players randomly pick 7 letters from a bag of 
 5. If the word is valid, then points will be calculated as following:
    1. Every letter has a point value associated with it: 
       - 1 - A, E, I, L, N, O, R, S, T, U
-      - 2 - D, G; 3 - B, C, M, P
+      - 2 - D, G
+      - 3 - B, C, M, P
       - 4 - F, H, V, W, Y
       - 5 - K
       - 8 - J, X
