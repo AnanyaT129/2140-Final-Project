@@ -13,6 +13,8 @@ z = None
 class GUI:
     def __init__(self, p):
         self.game = p
+        self.player_1 = None
+        self.player_2 = None
 
     # helper functions
     @staticmethod
@@ -241,9 +243,9 @@ class GUI:
         if game.skipped_turns[0] >= 2 and game.skipped_turns[1] >= 2:
             overall.end_game()
 
-    def start_turn(self, player_1, player_2):
+    def start_turn(self):
         game = self.game
-        game.game_start(player_1, player_2)
+        game.game_start(self.player_1, self.player_2)
         print(game.current_board.get_guesses())
 
         global window
@@ -291,13 +293,13 @@ class GUI:
         player_l6.place(x=620, y=17)
         player_l7 = Label(window, text=game.player1.get_letters()[6], height=3, width=6, bg='red')
         player_l7.place(x=680, y=17)
-        displays_turn = Label(window, text=f"TURN: {player_1}", height=2, width=10, bg='red')
+        displays_turn = Label(window, text=f"TURN: {game.get_p1_name()}", height=2, width=10, bg='red')
         displays_turn.place(x=800, y=17)
         score_label = Label(window, text="SCORES:", height=2, width=10, bg='red')
         score_label.place(x=800, y=60)
-        player1_points = Label(window, text=f"{player_1}: {game.player1.get_score()}", height=2, width=10, bg='red')
+        player1_points = Label(window, text=f"{game.get_p1_name()}: {game.player1.get_score()}", height=2, width=10, bg='red')
         player1_points.place(x=800, y=100)
-        player2_points = Label(window, text=f"{player_2}: {game.player2.get_score()}", height=2, width=10, bg='red')
+        player2_points = Label(window, text=f"{game.get_p2_name()}: {game.player2.get_score()}", height=2, width=10, bg='red')
         player2_points.place(x=800, y=140)
 
         letter_matrix = [player_l1, player_l2, player_l3, player_l4, player_l5, player_l6, player_l7, displays_turn,
@@ -321,19 +323,19 @@ class GUI:
         player2skip.pack()
         player2skip.place(x=90, y=250)
 
-        player1_button = Button(window, height=3, width=10, text=f'End turn for \n{player_1}', command=overall.end_turn_player1)
+        player1_button = Button(window, height=3, width=10, text=f'End turn for \n{game.get_p1_name()}', command=overall.end_turn_player1)
         player1_button.pack()
         player1_button.place(x=10, y=190)
 
-        player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=overall.end_turn_player2)
+        player2_button = Button(window, height=3, width=10, text=f'End turn for \n{game.get_p2_name()}', command=overall.end_turn_player2)
         player2_button.pack()
         player2_button.place(x=90, y=190)
 
-        player1_forfeit = Button(window, height=3, width=10, text=f'{player_1} \nforfeit', command=overall.forfeit_player1)
+        player1_forfeit = Button(window, height=3, width=10, text=f'{game.get_p1_name} \nforfeit', command=overall.forfeit_player1)
         player1_forfeit.pack()
         player1_forfeit.place(x=10, y=310)
 
-        player2_forfeit = Button(window, height=3, width=10, text=f'{player_2} \nforfeit', command=overall.forfeit_player2)
+        player2_forfeit = Button(window, height=3, width=10, text=f'{game.get_p2_name()} \nforfeit', command=overall.forfeit_player2)
         player2_forfeit.pack()
         player2_forfeit.place(x=90, y=310)
 
@@ -361,10 +363,10 @@ class GUI:
         player2_textbox.place(x=65, y=65)
         player2 = player2_textbox.get("1.0", "end")
 
-        player_1 = player1_textbox.get("1.0", "end")
-        player_2 = player2_textbox.get("1.0", "end")
+        self.player_1 = player1_textbox.get("1.0", "end")
+        self.player_2 = player2_textbox.get("1.0", "end")
 
-        enter_names = Button(root, text="START", command= lambda: overall.start_turn(player_1, player_2), height=1, width=5, bg='white')
+        enter_names = Button(root, text="START", command= overall.start_turn, height=1, width=5, bg='white')
         enter_names.place(x=100, y=90)
         T.insert(tk.END, 'Enter the player1 and player2 information and click START')
 
