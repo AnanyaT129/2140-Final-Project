@@ -383,5 +383,5 @@ class GUI:
         root.mainloop()
 
 
-overall = GUI(GameClass)
+overall = GUI(GameClass())
 overall.setup()
