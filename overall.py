@@ -92,7 +92,7 @@ class GUI:
 
             # check for game end
             if game.check_game_end():
-                GUI.end_game()
+                overall.end_game()
 
         else:
             # remove guess from list of guesses
@@ -101,18 +101,18 @@ class GUI:
 
             # checks errors to display accurate messages
             if game.current_board.get_guesses() == [] and (g1.valid_first_word(game.current_board) is False):
-                GUI.first_word_error_message()
+                overall.first_word_error_message()
 
 
             elif g1.valid_word(game.current_board) is False:
                 if g1.check_if_word_in_hand(game.current_board) == 'IndexError':
-                    GUI.index_error_message()
+                    overall.index_error_message()
 
                 else:
-                    GUI.word_error_message()
+                    overall.word_error_message()
 
             else:
-                GUI.index_error_message()
+                overall.index_error_message()
 
 
     def end_turn_player1(self):
@@ -158,12 +158,12 @@ class GUI:
     def forfeit_player1(self):
         game = self.game
         game.winner = game.get_p2_name()
-        GUI.end_game()
+        overall.end_game()
 
     def forfeit_player2(self):
         game = self.game
         game.winner = game.get_p1_name()
-        GUI.end_game()
+        overall.end_game()
 
     def end_game(self):
         global end
@@ -172,7 +172,7 @@ class GUI:
         end.geometry("125x100")
         Label(end, text=f'The game has ended! \n'
                         f'The winner is {self.game.winner}!!').place(x=0, y=0)
-        close = Button(end, text="Close", command=GUI.end_all, height=1, width=4, bg='white')
+        close = Button(end, text="Close", command=overall.end_all, height=1, width=4, bg='white')
         close.place(x=40, y=60)
         end.mainloop()
 
@@ -230,16 +230,16 @@ class GUI:
         game = self.game
         if player == game.player1:
             if game.skipped_turns[0] >= 2:
-                GUI.skip_error_message()
+                overall.skip_error_message()
             else:
                 game.skipped_turns[0] += 1
         elif player == game.player2:
             if game.skipped_turns[1] >= 2:
-                GUI.skip_error_message()
+                overall.skip_error_message()
             else:
                 game.skipped_turns[1] += 1
         if game.skipped_turns[0] >= 2 and game.skipped_turns[1] >= 2:
-            GUI.end_game()
+            overall.end_game()
 
     def start_turn(self, player_1, player_2):
         game = self.game
@@ -254,9 +254,9 @@ class GUI:
         # Graphical setup of the game
 
         # Direction buttons
-        down = Button(window, text="↓", command=lambda: GUI.directionfunction('down'), height=2, width=4, bg='red')
+        down = Button(window, text="↓", command=lambda: overall.directionfunction('down'), height=2, width=4, bg='red')
         down.place(x=70, y=60)
-        right = Button(window, text="→", command=lambda: GUI.directionfunction('right'), height=2, width=4, bg='red')
+        right = Button(window, text="→", command=lambda: overall.directionfunction('right'), height=2, width=4, bg='red')
         right.place(x=110, y=60)
 
         # Position buttons
@@ -267,7 +267,7 @@ class GUI:
             matrix.append([])
             for b in range(game.current_board.board_dimension):
                 score = str(game.current_board.get_scoreboard()[a][b]) + "x"
-                M = Button(window, text=score, command=lambda c=a, d=b: GUI.startingpoint(c, d), height=2, width=4,
+                M = Button(window, text=score, command=lambda c=a, d=b: overall.startingpoint(c, d), height=2, width=4,
                            bg='white')
                 M.place(x=(200 + (40 * b)), y=(100 + (43 * a)))
                 matrix[a].append(M)
@@ -309,31 +309,31 @@ class GUI:
         txtbox.pack()
         txtbox.place(x=10, y=130)
 
-        btnRead = Button(window, height=1, width=4, text="Enter", command=lambda: GUI.get_text(txtbox))
+        btnRead = Button(window, height=1, width=4, text="Enter", command=lambda: overall.get_text(txtbox))
         btnRead.pack()
         btnRead.place(x=70, y=160)
 
-        player1skip = Button(window, height=1, width=10, text="Player 1 Skip", command=lambda: GUI.skip(game.player1))
+        player1skip = Button(window, height=1, width=10, text="Player 1 Skip", command=lambda: overall.skip(game.player1))
         player1skip.pack()
         player1skip.place(x=10, y=250)
 
-        player2skip = Button(window, height=1, width=10, text="Player 2 Skip", command=lambda: GUI.skip(game.player2))
+        player2skip = Button(window, height=1, width=10, text="Player 2 Skip", command=lambda: overall.skip(game.player2))
         player2skip.pack()
         player2skip.place(x=90, y=250)
 
-        player1_button = Button(window, height=3, width=10, text=f'End turn for \n{player_1}', command=GUI.end_turn_player1)
+        player1_button = Button(window, height=3, width=10, text=f'End turn for \n{player_1}', command=overall.end_turn_player1)
         player1_button.pack()
         player1_button.place(x=10, y=190)
 
-        player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=GUI.end_turn_player2)
+        player2_button = Button(window, height=3, width=10, text=f'End turn for \n{player_2}', command=overall.end_turn_player2)
         player2_button.pack()
         player2_button.place(x=90, y=190)
 
-        player1_forfeit = Button(window, height=3, width=10, text=f'{player_1} \nforfeit', command=GUI.forfeit_player1)
+        player1_forfeit = Button(window, height=3, width=10, text=f'{player_1} \nforfeit', command=overall.forfeit_player1)
         player1_forfeit.pack()
         player1_forfeit.place(x=10, y=310)
 
-        player2_forfeit = Button(window, height=3, width=10, text=f'{player_2} \nforfeit', command=GUI.forfeit_player2)
+        player2_forfeit = Button(window, height=3, width=10, text=f'{player_2} \nforfeit', command=overall.forfeit_player2)
         player2_forfeit.pack()
         player2_forfeit.place(x=90, y=310)
 
@@ -345,9 +345,12 @@ class GUI:
         root.geometry("250x170")
         T = Text(root, height=5, width=52)
 
-        player1_name = Label(root, text="player1: ").place(x=20, y=48)
-        player2_name = Label(root, text="player2: ").place(x=20, y=65)
-        Instruct = Label(root, text="Enter Usernames").place(x=70, y=25)
+        player1_name = Label(root, text="player1: ")
+        player1_name.place(x=20, y=48)
+        player2_name = Label(root, text="player2: ")
+        player2_name.place(x=20, y=65)
+        Instruct = Label(root, text="Enter Usernames")
+        Instruct.place(x=70, y=25)
 
         player1_textbox = Text(root, height=1, width=15)
         player1_textbox.pack()
@@ -361,7 +364,8 @@ class GUI:
         player_1 = player1_textbox.get("1.0", "end")
         player_2 = player2_textbox.get("1.0", "end")
 
-        enter_names = Button(root, text="START", command= lambda: GUI.start_turn(player_1, player_2), height=1, width=5, bg='white').place(x=100, y=90)
+        enter_names = Button(root, text="START", command= lambda: overall.start_turn(player_1, player_2), height=1, width=5, bg='white')
+        enter_names.place(x=100, y=90)
         T.insert(tk.END, 'Enter the player1 and player2 information and click START')
 
         instruct = Tk()
@@ -379,4 +383,5 @@ class GUI:
         root.mainloop()
 
 
-GUI(GameClass).setup()
+overall = GUI(GameClass)
+overall.setup()
