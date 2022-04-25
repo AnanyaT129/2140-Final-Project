@@ -22,8 +22,8 @@ Scrabble is a board game in which players randomly pick 7 letters from a bag of 
       - 8 - J, X
       - 10 - Q, Z
    2. Some squares will multiply the letter score by 3 and some by 2
-   3. Players will recieve points for letters that are part of their word that were already on the board
-   4. The points they recieve per turn are the sum of the total points for each letter in the word
+   3. Players will receive points for letters that are part of their word that were already on the board
+   4. The points they receive per turn are the sum of the total points for each letter in the word
 6. Players also have the option to either skip their turn, with a maximum of 2 skips each per game, or forfeit the game
 7. The game ends when either the bag is empty, both players have skipped their turn twice, or one player forfeits
    - The winner is the player with more points or 
