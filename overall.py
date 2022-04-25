@@ -15,6 +15,8 @@ class GUI:
         self.game = p
         self.player_1 = None
         self.player_2 = None
+        self.player1_textbox = None
+        self.player2_textbox = None
 
     # helper functions
     @staticmethod
@@ -99,7 +101,6 @@ class GUI:
         else:
             # remove guess from list of guesses
             game.current_board.guesses.remove(game.current_board.guesses[-1])
-            print(game.current_board.guesses)
 
             # checks errors to display accurate messages
             if game.current_board.get_guesses() == [] and (g1.valid_first_word(game.current_board) is False):
@@ -244,6 +245,9 @@ class GUI:
             overall.end_game()
 
     def start_turn(self):
+        self.player_1 = self.player1_textbox.get("1.0", "end")
+        self.player_2 = self.player2_textbox.get("1.0", "end")
+
         game = self.game
         game.game_start(self.player_1, self.player_2)
         print(game.current_board.get_guesses())
@@ -331,7 +335,7 @@ class GUI:
         player2_button.pack()
         player2_button.place(x=90, y=190)
 
-        player1_forfeit = Button(window, height=3, width=10, text=f'{game.get_p1_name} \nforfeit', command=overall.forfeit_player1)
+        player1_forfeit = Button(window, height=3, width=10, text=f'{game.get_p1_name()} \nforfeit', command=overall.forfeit_player1)
         player1_forfeit.pack()
         player1_forfeit.place(x=10, y=310)
 
@@ -354,17 +358,13 @@ class GUI:
         Instruct = Label(root, text="Enter Usernames")
         Instruct.place(x=70, y=25)
 
-        player1_textbox = Text(root, height=1, width=15)
-        player1_textbox.pack()
-        player1_textbox.place(x=65, y=48)
+        self.player1_textbox = Text(root, height=1, width=15)
+        self.player1_textbox.pack()
+        self.player1_textbox.place(x=65, y=48)
 
-        player2_textbox = Text(root, height=1, width=15)
-        player2_textbox.pack()
-        player2_textbox.place(x=65, y=65)
-        player2 = player2_textbox.get("1.0", "end")
-
-        self.player_1 = player1_textbox.get("1.0", "end")
-        self.player_2 = player2_textbox.get("1.0", "end")
+        self.player2_textbox = Text(root, height=1, width=15)
+        self.player2_textbox.pack()
+        self.player2_textbox.place(x=65, y=65)
 
         enter_names = Button(root, text="START", command= overall.start_turn, height=1, width=5, bg='white')
         enter_names.place(x=100, y=90)
