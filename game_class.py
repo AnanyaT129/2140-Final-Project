@@ -18,7 +18,6 @@ class GameClass:
         self.player2_name = None
         self.winner = None
 
-
     def get_p1_name(self):
         return self.player1_name
 
@@ -39,7 +38,6 @@ class GameClass:
         self.player1_name = player1_name
         self.player2_name = player2_name
 
-    # need to add skips
     def game_turn(self, word, start, direction, player):
         entered_word = WordClass(word, start, direction, player)
         if ((self.current_board.guesses == [] and
@@ -54,7 +52,7 @@ class GameClass:
                 for x in used_letters:
                     player.remove_letter(x)
                 player.replenish_letters(self.bag)
-    
+
     def update_winner(self):
         if self.player1.get_score() > self.player2.get_score():
             self.winner = self.player1
@@ -63,7 +61,7 @@ class GameClass:
         else:
             self.winner = None
 
-
+    @staticmethod
     def print_array(arr):
         for x in range(len(arr)):
             print(arr[x])

@@ -144,6 +144,12 @@ class BoardClass:
             self.board_scores[half + x][dim - fourth + x] = 3
 
     def place_word(self, word, direction, start):
+        """Checks if the word can be placed on the spot
+        :param word: str
+        :param direction: str
+        :param start: tuple
+        :return: bool
+        """
         try:
             list_of_letters = [char for char in word.upper()]
             if direction == "down":
@@ -186,6 +192,7 @@ class WordClass:
 
     # check word is in dictionary
     def word_checker(self):
+        """Opens the Scrabble dictionary and checks if the inputted word exists in there"""
         with open('PossibleWords.txt', encoding='utf-8') as f:
             dic = {}
 
@@ -205,6 +212,10 @@ class WordClass:
 
     # check word uses the existing letters on the board properly
     def check_if_word_in_hand(self, board):
+        """Checks if the inputted word contains letters from the hand
+        :param board: BoardClass
+        :return: bool
+        """
         letters_in_word = [char for char in self.word]
         letterboard = board.get_letterboard()
         try:
