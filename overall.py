@@ -152,15 +152,14 @@ class GUI:
 
         else:
             self.handle_bad_guess(g1)
-
-    def forfeit_player1(self):
-        """Sets the winner as the other player if one forfeits"""
-        self.game.winner = self.game.get_p2_name()
-        self.end_game()
-
-    def forfeit_player2(self):
-        self.game.winner = self.game.get_p1_name()
-        self.end_game()
+    
+    def forfeit(self, player):
+        if player == self.game.player1:
+            self.game.winner = self.game.get_p2_name()
+            self.end_game()
+        else:
+            self.game.winner = self.game.get_p1_name()
+            self.end_game()
 
     def skip(self, player):
         """Skips a turn
@@ -303,19 +302,19 @@ class GUI:
         player2skip.pack()
         player2skip.place(x=90, y=250)
 
-        player1_button = Button(self.window, height=3, width=10, text=f'End turn for \n{self.game.get_p1_name()}', command=self.end_turn_player1)
+        player1_button = Button(self.window, height=3, width=10, text=f'End turn for \n{self.game.get_p1_name()}', command=lambda: self.end_turn(self.game.player1))
         player1_button.pack()
         player1_button.place(x=10, y=190)
 
-        player2_button = Button(self.window, height=3, width=10, text=f'End turn for \n{self.game.get_p2_name()}', command=self.end_turn_player2)
+        player2_button = Button(self.window, height=3, width=10, text=f'End turn for \n{self.game.get_p2_name()}', command=lambda: self.end_turn(self.game.player2))
         player2_button.pack()
         player2_button.place(x=90, y=190)
 
-        player1_forfeit = Button(self.window, height=3, width=10, text=f'{self.game.get_p1_name()} \nforfeit', command=self.forfeit_player1)
+        player1_forfeit = Button(self.window, height=3, width=10, text=f'{self.game.get_p1_name()} \nforfeit', command=lambda: self.forfeit(self.game.player1))
         player1_forfeit.pack()
         player1_forfeit.place(x=10, y=310)
 
-        player2_forfeit = Button(self.window, height=3, width=10, text=f'{self.game.get_p2_name()} \nforfeit', command=self.forfeit_player2)
+        player2_forfeit = Button(self.window, height=3, width=10, text=f'{self.game.get_p2_name()} \nforfeit', command=lambda: self.forfeit(self.game.player2))
         player2_forfeit.pack()
         player2_forfeit.place(x=90, y=310)
 
@@ -330,31 +329,26 @@ class GUI:
         if self.direction_str == 'down':
             for i in range(len(word)):
                 self.matrix[row + i][col].config(text=word[i], bg='orange')
-        
-    def end_turn_player1(self):
+    
+    def end_turn(self, player):
         """Changes the hand so that it displays the other player's hand, updates score"""
-        self.x = 2
-        self.letter_matrix[0].config(text=self.game.player2.get_letters()[0])
-        self.letter_matrix[1].config(text=self.game.player2.get_letters()[1])
-        self.letter_matrix[2].config(text=self.game.player2.get_letters()[2])
-        self.letter_matrix[3].config(text=self.game.player2.get_letters()[3])
-        self.letter_matrix[4].config(text=self.game.player2.get_letters()[4])
-        self.letter_matrix[5].config(text=self.game.player2.get_letters()[5])
-        self.letter_matrix[6].config(text=self.game.player2.get_letters()[6])
-        self.letter_matrix[7].config(text=f"TURN: {self.game.get_p2_name()}")
-        self.letter_matrix[8].config(text=f" {self.game.get_p1_name()}: {self.game.player1.get_score()}")
-        self.letter_matrix[9].config(text=f" {self.game.get_p2_name()}: {self.game.player2.get_score()}")
-
-    def end_turn_player2(self):
-        self.x = 1
-        self.letter_matrix[0].config(text=self.game.player1.get_letters()[0])
-        self.letter_matrix[1].config(text=self.game.player1.get_letters()[1])
-        self.letter_matrix[2].config(text=self.game.player1.get_letters()[2])
-        self.letter_matrix[3].config(text=self.game.player1.get_letters()[3])
-        self.letter_matrix[4].config(text=self.game.player1.get_letters()[4])
-        self.letter_matrix[5].config(text=self.game.player1.get_letters()[5])
-        self.letter_matrix[6].config(text=self.game.player1.get_letters()[6])
-        self.letter_matrix[7].config(text=f"TURN: {self.game.get_p1_name()}")
+        if player == self.game.player1:
+            self.x = 2
+            pl = self.game.player2
+            turn = self.game.get_p2_name()
+        else:
+            self.x = 1
+            pl = self.game.player1
+            turn = self.game.get_p1_name()
+        
+        self.letter_matrix[0].config(text=pl.get_letters()[0])
+        self.letter_matrix[1].config(text=pl.get_letters()[1])
+        self.letter_matrix[2].config(text=pl.get_letters()[2])
+        self.letter_matrix[3].config(text=pl.get_letters()[3])
+        self.letter_matrix[4].config(text=pl.get_letters()[4])
+        self.letter_matrix[5].config(text=pl.get_letters()[5])
+        self.letter_matrix[6].config(text=pl.get_letters()[6])
+        self.letter_matrix[7].config(text=f"TURN: {turn}")
         self.letter_matrix[8].config(text=f" {self.game.get_p1_name()}: {self.game.player1.get_score()}")
         self.letter_matrix[9].config(text=f" {self.game.get_p2_name()}: {self.game.player2.get_score()}")
 
