@@ -45,18 +45,3 @@ To play with the GUI, run the file ```overall.py```.
 10. If you want to forfeit the game, press the ```forfeit``` button with your username on it
 11. Once your turn is over, press the ```End turn``` button with your username on it. The letters on the top will automatically update for the other player, as will the scores. 
 12. Once the game ends, a new window will pop up displaying the winner. Press the close button on that window to close all running files for the game. 
-
-## How to play - Terminal
-To play in terminal, run the file ``game_class.py```.
-
-1. Enter the players names when prompted
-2. Each turn must follow the rules above
-3. The current board and current player's hand will be printed before each turn, showing where words are placed
-4. When prompted, enter a word by typing the whole word out (including existing letters on the board that the word is using) and pressing enter
-5. Then give the row number and column number of the starting point of the word - meaning the square the first letter of the board is on, as prompted
-   - Numbers are indexed from 0, so leftmost row and topmost column is 0, the rightmost row and bottommost column is 14, and the middle row and column is 7. 
-6. Then input the directon the word is going in
-   - Directions must be a string, either ```"down"``` or ```"right"```
-   - No other string will be accepted
-7. If the word is valid, then points will be calculated and shown, and the board/current players hand will be displayed for the next player.
-8. When the game ends, the winner will be printed and the program will stop running. 
