@@ -1,3 +1,5 @@
+# Contains unittests for functions in the base classes
+
 import unittest
 import numpy as np
 import collections
