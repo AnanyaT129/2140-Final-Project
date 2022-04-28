@@ -10,7 +10,6 @@ letter_value = {"A": 1, "B": 3, "C": 3, "D": 2, "E": 1, "F": 4, "G": 2, "H": 4, 
                 "N": 1, "O": 1, "P": 3, "Q": 10, "R": 1, "S": 1., "T": 1, "U": 1, "V": 4, "W": 4, "X": 8, "Y": 4,
                 "Z": 10}
 
-
 # PlayerClass
 # class containing functions to do with a player
 #  - Update score
@@ -20,7 +19,23 @@ letter_value = {"A": 1, "B": 3, "C": 3, "D": 2, "E": 1, "F": 4, "G": 2, "H": 4, 
 #  - Get letters
 
 class PlayerClass:
+    '''
+    Represent a player in the game of scrabble
+
+    Class variables:
+    name (String) -- the player's name
+    score (Natural Number) -- the player's score
+    letters (List of Characters) -- the player's current hand of 7 letters
+    skips (Natural Number) -- the number of skipped turns the player has taken
+    '''
     def __init__(self, name, bag):
+        '''
+        Constructor
+        
+        Keyword Arguments:
+        name (String) -- the player's name
+        bag (BagClass) -- the bag of letters in the game
+        '''
         self.name = name
         self.score = 0
         self.letters = []
@@ -28,20 +43,35 @@ class PlayerClass:
         self.replenish_letters(bag)
 
     def update_score(self, points):
+        '''
+        Add the incomming points to the existing score
+        
+        Keyword Arguments:
+        points (Positive Integer) -- the incoming points
+        '''
         self.score += points
 
     def get_score(self):
+        '''Return the player's score'''
         return self.score
 
     def replenish_letters(self, bag):
+        '''
+        Add letters to the player's hand until they have 7 total
+        
+        Keyword Arguments:
+        bag (BagClass) -- the bag of letters in the game
+        '''
         x = 7 - len(self.letters)
         for y in range(x):
             self.letters.append(bag.remove_tile())
 
     def get_letters(self):
+        '''Return the player's hand'''
         return self.letters
 
     def remove_letter(self, letter):
+        '''Remove the specified letter from the player's hand'''
         self.letters.remove(letter)
 
 
@@ -52,12 +82,20 @@ class PlayerClass:
 #  - removes letter from bag
 
 class BagClass:
+    '''
+    Represent the bag of letters in the game of scrabble
+
+    Class variables:
+    bag (List of Strings) -- a list representing all the letters
+    '''
     def __init__(self):
+        '''Constructor'''
         self.bag = []
         self.initialize()
-
+    
     def initialize(self):
-        self.bag.extend(["A"] * 9)
+        '''Add all the letters to the bag and randomize the order'''
+        self.bag.extend(["A"] * 10)
         self.bag.extend(["B"] * 2)
         self.bag.extend(["C"] * 2)
         self.bag.extend(["D"] * 4)
@@ -77,22 +115,23 @@ class BagClass:
         self.bag.extend(["R"] * 6)
         self.bag.extend(["S"] * 4)
         self.bag.extend(["T"] * 6)
-        self.bag.extend(["U"] * 4)
+        self.bag.extend(["U"] * 5)
         self.bag.extend(["V"] * 2)
         self.bag.extend(["W"] * 2)
         self.bag.extend(["X"] * 1)
         self.bag.extend(["Y"] * 2)
         self.bag.extend(["Z"] * 1)
-        self.bag.extend(["BLANK"] * 2)
 
         random.shuffle(self.bag)
 
     def remove_tile(self):
+        '''Remove a tile from the bag and return it'''
         removed = self.bag[-1]
         self.bag.pop()
         return removed
 
     def get_bag_size(self):
+        '''Return the number of letters in the bag'''
         return len(self.bag)
 
 
@@ -102,7 +141,17 @@ class BagClass:
 #  - places word on board
 
 class BoardClass:
+    '''
+    Represent the game board in the game of scrabble
+
+    Class variables:
+    board_dimension (Positive Integer) -- the length of a side of the square board
+    board_letters (List of Lists of Characters) -- square matrix representing letters placed on the board
+    board_scores (NumPy Array) -- square NumPy array with the score weight of each square
+    guesses (List of Strings) -- list of words guessed in the game so far
+    '''
     def __init__(self):
+        '''Constructor'''
         self.board_dimension = 15
         self.board_letters = np.zeros((self.board_dimension, self.board_dimension), dtype=int).tolist()
         self.board_scores = np.ones((self.board_dimension, self.board_dimension), dtype=int)
@@ -110,6 +159,7 @@ class BoardClass:
         self.set_scores()
 
     def set_scores(self):
+        '''Set the locations of the 2 and 3 weight squares in the board'''
         # constants
         dim = self.board_dimension - 1
         half = math.ceil(dim / 2)
@@ -145,6 +195,17 @@ class BoardClass:
             self.board_scores[half + x][dim - fourth + x] = 3
 
     def place_word(self, word, direction, start):
+        '''
+        Place a word on the board and returns True if successful
+        
+        Keyword Arguments:
+        word (String) -- the word being placed
+        direction (String) -- either "down" or "right"
+        start (Tuple of Natural Numbers) -- starting point of the word
+        
+        Exceptions:
+        IndexError
+        '''
         try:
             list_of_letters = [char for char in word.upper()]
             if direction == "down":
@@ -160,16 +221,17 @@ class BoardClass:
             print("The word you inputted is either too long or the starting point is invalid.")
             return False
 
-
     def get_guesses(self):
+        '''Return the list of guesses so far'''
         return self.guesses
 
     def get_scoreboard(self):
+        '''Return the NumPy array containing the score weights of the board'''
         return self.board_scores
 
     def get_letterboard(self):
+        '''Return the board with the placed words'''
         return self.board_letters
-
 
 # WordClass
 # class containing functions to do with an entered word
@@ -178,7 +240,27 @@ class BoardClass:
 #  - add word score to player
 
 class WordClass:
+    '''
+    Represent an entered word in the game of scrabble
+
+    Class variables:
+    word (String) -- the guessed word
+    starting_point (Tuple of Natural Numbers) -- the starting point of the word on the board
+    direction (String) -- the direction of the word, either "down" or "right"
+    player (PlayerClass) -- the player who entered the word
+    used_letters (List of Characters) -- list of letters used by the player to make the word
+    '''
     def __init__(self, word, start, direction, player):
+        '''
+        Constructor
+        
+        Keyword Arguments:
+        word (String) -- the guessed word
+        start (Tuple of Natural Numbers) -- the starting point of the word on the board
+        direction (String) -- the direction of the word, either "down" or "right"
+        player (PlayerClass) -- the player who entered the word
+        used_letters (List of Characters) -- list of letters used by the player to make the word
+        '''
         self.word = word.upper()
         self.starting_point = start
         self.direction = direction
@@ -187,6 +269,7 @@ class WordClass:
 
     # check word is in dictionary
     def word_checker(self):
+        '''Return True if the word is in the official Scrabble dictionary'''
         with open('PossibleWords.txt', encoding='utf-8') as f:
             dic = {}
 
@@ -206,6 +289,15 @@ class WordClass:
 
     # check word uses the existing letters on the board properly
     def check_if_word_in_hand(self, board):
+        '''
+        Return True if every letter in the word is either in the player's hand or
+        on the board in it's respective position
+        
+        Keyword Arguments:
+        board (BoardClass) -- the board in the game
+        
+        Exceptions:
+        IndexError'''
         letters_in_word = [char for char in self.word]
         letterboard = board.get_letterboard()
         try:
@@ -234,6 +326,12 @@ class WordClass:
 
     # check word is not a repeated word
     def check_repeat(self, board):
+        '''
+        Returns False if the entered word is a repeat of an existing guessed word
+        
+        Keyword Arguments:
+        board (BoardClass) -- the board in the game
+        '''
         count = 0
         for i in board.guesses:
             if i == self.word.lower():
@@ -245,6 +343,12 @@ class WordClass:
 
     # check word is valid
     def valid_word(self, board):
+        '''
+        Return True only if the word passes all three checks
+        
+        Keyword Arguments:
+        board (BoardClass) -- the board in the game
+        '''
         if (WordClass.word_checker(self) and
                 WordClass.check_repeat(self, board) and
                 WordClass.check_if_word_in_hand(self, board)):
@@ -253,6 +357,11 @@ class WordClass:
             return False
 
     def valid_first_word(self, board):
+        '''
+        Return True if the word starts in the middle row or column
+        
+        Keyword Arguments:
+        board (BoardClass) -- the board in the game'''
         if (self.starting_point[0] == (math.ceil(board.board_dimension / 2) - 1) or 
             self.starting_point[1] == (math.ceil(board.board_dimension / 2) - 1)):
             return True
@@ -260,6 +369,14 @@ class WordClass:
             return False
 
     def calculate_points(self, board):
+        '''
+        Return the number of points the word scores
+        
+        Keyword Arguments:
+        board (BoardClass) -- the board in the game
+        
+        Exceptions:
+        Return 0'''
         list_of_letters = [char for char in self.word.upper()]
         sum = 0
         scoreboard = board.get_scoreboard()
@@ -278,4 +395,5 @@ class WordClass:
             return 0
 
     def return_used_letters(self):
+        '''Return the list of used letters'''
         return self.used_letters
